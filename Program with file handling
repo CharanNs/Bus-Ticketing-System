@@ -40,7 +40,7 @@ int main()
 {
 	
 	printf("\n\n\n                                  W  E  L  C  O  M  E\n\n* * * * *         L O V E L Y    P R O F E S S I O N A L    U N I V E R S I T Y .......  * * * * *\n\n\n\t\t\t    M  I  N  I     P  R  O  J  E  C  T\n\n");
-	printf("\n\tSubmitted by,\n\t\tName:          N S Charan Reddy\n\t\tRegn.no.:      11601863\n\t\tSec/roll.no.:  K1651/A03\n\n\tSubmitted to,\n\t\tName:          Gurpreet Kaur mam\n\t\tID no.:        20583\n\t\tDepartment:    CSE");
+	printf("\n\tSubmitted by,\n\t\tName:          N S Charan Reddy\n\t\tRegn.no.:      ********\n\t\tSec/roll.no.:  K1651/A03\n\n\tSubmitted to,\n\t\tName:          Gurpreet Kaur mam\n\t\tID no.:        *****\n\t\tDepartment:    CSE");
 	printf("\n\n\n\n*  *  *  *  *  *  *  *  *  *  *   ELECTRONIC BUS TICKETING SYSTETM   *  *  *  *  *  *  *  *  *  *  *");
 	printf("\n                                       (NonStop Volvo Service)\n                                          Book bus fr today");
 	menu();
