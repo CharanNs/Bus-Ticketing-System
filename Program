@@ -1,0 +1,439 @@
+#include<stdio.h>                
+#include<conio.h>                
+#include<string.h>               
+#include<stdlib.h>              
+
+void menu();                   
+void emty();                   
+void assign_bus();             
+void bus_info();               
+void seat_booking();           
+void availability();           
+void total_transaction();      
+void cancel(); 
+void busfile();
+void transfile();          
+
+struct time
+{
+	int Hrs,Min;
+};
+
+struct bus
+{
+	int     bn;                  
+	char    bc[100];             
+	char    seat[9][4][20];      
+	struct  time dt,at;          
+	char    to[50];              
+	char    from[50];            
+	float   fare;                
+	int     sr;                  
+}b[100];
+
+FILE *p,*q;
+char        EmptySeat[]="Empty";
+static int  n=1;
+char        i=':';
+
+int main()
+{
+	
+	printf("\n\n\n                                  W  E  L  C  O  M  E\n\n* * * * *         L O V E L Y    P R O F E S S I O N A L    U N I V E R S I T Y .......  * * * * *\n\n\n\t\t\t    M  I  N  I     P  R  O  J  E  C  T\n\n");
+	printf("\n\tSubmitted by,\n\t\tName:          N S Charan Reddy\n\t\tRegn.no.:      11601863\n\t\tSec/roll.no.:  K1651/A03\n\n\tSubmitted to,\n\t\tName:          Gurpreet Kaur mam\n\t\tID no.:        20583\n\t\tDepartment:    CSE");
+	printf("\n\n\n\n*  *  *  *  *  *  *  *  *  *  *   ELECTRONIC BUS TICKETING SYSTETM   *  *  *  *  *  *  *  *  *  *  *");
+	printf("\n                                       (NonStop Volvo Service)\n                                          Book bus fr today");
+	menu();
+}
+
+void menu()
+{
+	int ch;
+	printf("\n\n.  .  .  .  .  .  .  .  .  .  .  .  .  .  ");
+	printf("\n\n\tPick ur Preference:");
+	printf("\n\n\t1.Assign a Bus");
+	printf("\n\t2.Seat Booking");
+	printf("\n\t3.Buses Info");
+	printf("\n\t4.Availability");
+	printf("\n\t5.Seat Cancellation");
+	printf("\n\t6.Total Transactions");
+	printf("\n\t7.Bow Out (quit)");
+	printf("\n\n\tEnter your preference from 1-7 as mentioned:");
+	fflush(stdin);            
+	scanf("%d",&ch);
+	switch(ch)
+	{
+		case 1:
+			assign_bus();
+			break;
+		case 2:
+			seat_booking();
+			break;
+		case 3:
+			bus_info();  
+			break;
+		case 4:
+			availability();
+			break;
+		case 5:
+		    cancel();
+			break;	
+		case 6:
+			total_transaction();
+			break;
+		case 7:
+			printf("\n\n  .....A project is complete when it starts working for you, rather than you working for it.");
+			printf("\n\n*  *  *  *  *  *  *  *  *  *  *  *  *   T H A N K  Y O U  *  *  *  *  *  *  *  *  *  *  *  *  *");
+			exit(0);
+		default:
+		    getch();
+		    menu();
+	}
+}
+
+void assign_bus()
+{
+	char ch;
+	printf("\n\t\tAssign details of Bus(es):\n");
+	do
+	{
+		printf("\n\n\tBus Number:  %d",n);
+        b[n].bn=n;
+		
+		buscode:
+			printf("\n\n\tEnter Bus Code:\t");
+			fflush(stdin);
+			scanf("%s",&b[n].bc);
+						
+		from:
+			printf("\n\tFrom:\t");
+			fflush(stdin);
+			scanf("%s",&b[n].from);	
+				
+        to: 
+		    printf("\n\tTo:\t");
+		    fflush(stdin);
+            gets(b[n].to);
+            
+        printf("\n\tEnter time only in hh:mm (24hrs) format");
+		
+		arrivaltime:
+			printf("\n\tArrival time:\t");
+			fflush(stdin);
+			scanf("%d%c%d",&b[n].at.Hrs,&i,&b[n].at.Min);
+			if(b[n].at.Hrs==0)
+			{
+				printf("\n\tInvalid Entry...");
+				goto arrivaltime;
+			}
+		    if((i!=':')||(b[n].at.Hrs>=24)||(b[n].at.Hrs<0)||(b[n].at.Min>=60)||(b[n].at.Min<0))
+		    {
+		    	printf("\n\tInvalid Time.....Enter only in hh:mm format");
+                goto arrivaltime;
+		    }
+		    
+		departuretime:
+		    printf("\n\tDeparture time:\t");
+		    fflush(stdin);
+		    scanf("%d%c%d",&b[n].dt.Hrs,&i,&b[n].dt.Min);
+		    if(b[n].dt.Hrs==0)
+			{
+				printf("\n\tInvalid Entry...");
+				goto departuretime;
+			}
+		    if((i!=':')||(b[n].dt.Hrs>=24)||(b[n].dt.Hrs<0)||(b[n].dt.Min>=60)||(b[n].dt.Min<0))
+		    {
+		        printf("\n\tInvalid Time.....Enter only in hh:mm format");
+                goto departuretime;
+		    }
+		    
+		if(b[n].at.Hrs>b[n].dt.Hrs)
+		{
+		    printf("\n\t\tDeparture time should be greater than Arrival time");
+		    goto arrivaltime;
+		}
+		
+        printf("\n\tFare:\t");
+		fflush(stdin);    
+		scanf("%f",&b[n].fare);
+		emty();		
+		b[n].sr=0;		
+	    printf("\n\tDo u want to assign another bus;(y/n):\t ");
+		fflush(stdin);
+		scanf("%c",&ch);
+		n++;
+	}while(ch=='y'||ch=='Y');
+	menu();
+}
+
+void bus_info()
+{
+	int a;
+	char ch;
+    printf("\n\n\t\tBUSES AVALAIBLE\n");
+    for(a=1;a<n;a++)
+    {
+    	printf("\n\n\t\tbus no:\t\t\t%d",b[a].bn);
+        printf("\n\t\tbus code:\t\t%s",b[a].bc);
+        printf("\n\t\tFrom:\t\t\t%s",b[a].from);
+        printf("\n\t\tTo:\t\t\t%s",b[a].to);
+        printf("\n\t\tArrival time:\t\t%d%c%d",b[a].at.Hrs,i,b[a].at.Min);
+        printf("\n\t\tDeparture time:\t\t%d%c%d",b[a].dt.Hrs,i,b[a].dt.Min);
+        printf("\n\t\tFare:\t\t\t%.4f",b[a].fare);
+        printf("\n\t\tSeats Reserved:\t\t%d\n",b[a].sr);
+        printf("\n\t\tSeats Left:\t\t%d\n",36-(b[a].sr));
+    }
+    printf("\n\n\t\tDo u need this information in a file?(Y/N):\t");
+    fflush(stdin);
+    scanf("%c",&ch);
+    if(ch=='y'||ch=='Y')
+   		busfile();
+    else
+        menu();
+}
+
+void seat_booking()
+{
+	char pn[50];
+    int fbn;
+    int fs;
+    char ch;
+    printf("\n\t\t\t Book ur Seat");
+    printf("\n\tBus Number:\t");
+    fflush(stdin);
+    scanf("%d",&fbn);
+    if(fbn>=n)
+	{
+    	printf("\n\t\tSorry there is no bus with that number...!?");
+    	seat_booking();
+    }
+    seat:
+    	printf("\n\tSeat Number[1-36]:\t");
+    	fflush(stdin);
+    	scanf("%d",&fs);
+    	if(fs>36)
+    	{
+    		printf("\n\t\t There r only 36 seats in this bus ...!");
+    		goto seat;
+    	}
+    	else if(strcmp(b[fbn].seat[fs/4][(fs%4)-1],"Empty")!=0)
+    	{
+    		printf("\n\tThis seat is already reserved....!");    		
+    		printf("\n\t\tDo u want to try again(y/n)\n");
+    		fflush(stdin);
+    		ch=getchar();
+    		if(ch=='y'||ch=='Y')
+            seat_booking();
+            else
+            menu();            
+    	}
+    	else
+    	{
+    		name:
+    		    printf("\n\tPassenger's Name:\t");    		
+    			fflush(stdin);
+    			gets(pn);
+    			strcpy(b[fbn].seat[fs/4][fs%4-1],pn);
+    			printf("\n\n\t\tseat no. %d is reserved for %s . . . . . . @ bus no. %d",fs,pn,fbn);
+    			b[fbn].sr++;			
+    			printf("\n\n\tDo u want to continue with reservation(y/n)\t");
+    			scanf("%c",&ch);
+   				if(ch=='y'||ch=='Y')
+   				seat_booking();
+                else
+                menu();
+    	}
+}
+
+void total_transaction()
+{
+	char ch;
+	int i;
+	long unsigned int fdt=0;
+	long unsigned int fbt=0;
+	printf("\n\n\t\t Total Transactions");
+	for(i=1;i<n;i++)
+	{
+		fbt=b[i].sr*b[i].fare;
+		printf("\n\tBus no:\t%d",i);
+		printf("\n\tTotal Seats booked:\t%d",b[i].sr);
+		printf("\n\tMoney transacted for bus no. %d:\t%lu\n",i,fbt);
+		fdt+=fbt;                     
+	}
+	printf("\n\n\t\t\tTotal:\t%lu\n",fdt);
+	printf("\n\n\t\tDo u need this information in a file?(Y/N):\t");
+    fflush(stdin);
+    scanf("%c",&ch);
+    if(ch=='y'||ch=='Y')
+   		transfile();
+    else
+        menu();
+}
+
+void emty()
+{
+	int i,j;
+	for( i=0;i<9;i++)
+	{
+		for( j=0;j<4;j++)
+		{
+			strcpy(b[n].seat[i][j],EmptySeat);
+		}
+	}
+}
+
+void availability()
+{
+	int fbn;
+	int sn=0,j,k;
+	char ch;
+	printf("\n\n\t\tEnter Bus no.:\t");
+	fflush(stdin);
+	scanf("%d",&fbn);
+	if(fbn>=n||fbn<1)
+	{
+		printf("\n\t\tBus doesn't Exist!!!!");
+		availability();
+	}
+	else
+	{
+		printf("\nBus code:\t%s",b[fbn].bc);		
+	    printf("\nFrom:\t\t%s",b[fbn].from);
+	    printf("\nTo:\t\t%s",b[fbn].to);
+	    printf("\nArrival Time:\t%d%c%d",b[fbn].at.Hrs,i,b[fbn].at.Min);
+	    printf("\nDeparture Time\t%d%c%d",b[fbn].dt.Hrs,i,b[fbn].dt.Min);	    	    
+	    printf("\nFare:\t\t%f",b[fbn].fare);
+	    printf("\nSeats reserved:\t%d",b[fbn].sr);
+	    printf("\nSeats left:\t%d\n",36-b[fbn].sr);
+	    for(j=0;j<9;j++)
+	    {
+	    	printf("\n");
+	    	for(k=0;k<4;k++)
+	    	{
+	    		sn++;
+	    		printf("%d .%s\t",sn,b[fbn].seat[j][k]);
+	    	}
+	    }
+	}
+	getch();
+	printf("\n\n\t\tDo u want to continue with another bus(y/n)??");
+	fflush(stdin);
+	scanf("%c",&ch);
+	if(ch=='y'||ch=='Y')
+	availability();
+	else
+	menu();
+}
+
+void cancel()
+
+{
+	int bnc;                          
+	int stc;                          
+	char ch;
+	printf("\n\t\tSeat Cancellation");
+	printf("\n\tBus Number:");
+	scanf("%d",&bnc);
+	if(bnc>=n||bnc<1)
+	{
+    	printf("\n\t\tSorry there is no bus with that number...!?");
+    	getch();
+    	cancel();
+    }
+    cancel_seat:
+    	printf("\n\tSeat number:\t");
+    	fflush(stdin);
+    	scanf("%d",&stc);
+    	if(stc>36)
+    	{
+    		printf("\n\t\t There r only 36 seats in this bus ...!");
+    		goto cancel_seat;
+    	}
+    	else if(strcmp(b[bnc].seat[stc/4][(stc%4)-1],"Empty")==0)
+    	{
+            printf("\n\tThis seat is not reserved....!\n\t\tCancel only reserved seats...!");   
+    		printf("\n\t\tDo u want to try again(y/n)\n");
+    		fflush(stdin);
+    		ch=getchar();
+    		if(ch=='y'||ch=='Y')
+            goto cancel_seat;
+            else
+            menu();
+    	}
+    	else
+    	{
+    		strcpy(b[bnc].seat[stc/4][stc%4-1],"Empty");
+    		b[bnc].sr--;
+    		printf("\n\t\tseat no. %d has been cancelled successfully . . . @ bus no. %d",stc,bnc);
+    		printf("\n\n\t Do u want to continue with cancellation(y/n)\t");
+    		fflush(stdin);
+    		scanf("%c",&ch);
+    		if(ch=='y'||ch=='Y')
+    		cancel();
+            else
+            menu();    	                  
+    	}
+}
+
+void busfile()
+{
+	int a;
+	int sn=0,j,k;
+	p=fopen("BusFile.txt","w");
+    fprintf(p,"\n\n\t\t. . . . . . Buses Info. . . . . . \n");
+    fprintf(p,"\n\t\t---------------------------------");
+    for(a=1;a<n;a++)
+    {
+    	fprintf(p,"\n\n\t\tBus no.:\t\t\t%d",b[a].bn);
+        fprintf(p,"\n\t\tBus code:\t\t%s",b[a].bc);
+        fprintf(p,"\n\t\tFrom:\t\t\t%s",b[a].from);
+        fprintf(p,"\n\t\tTo:\t\t\t%s",b[a].to);
+        fprintf(p,"\n\t\tArrival time:\t\t%d%c%d",b[a].at.Hrs,i,b[a].at.Min);
+        fprintf(p,"\n\t\tDeparture time:\t\t%d%c%d",b[a].dt.Hrs,i,b[a].dt.Min);
+        fprintf(p,"\n\t\tFare:\t\t\t%.4f",b[a].fare);
+        fprintf(p,"\n\t\tSeats Reserved:\t\t%d\n",b[a].sr);
+        fprintf(p,"\n\t\tSeats Left:\t\t%d\n",36-(b[a].sr));
+        for(j=0;j<9;j++)
+	    {
+	    	fprintf(p,"\n");
+	    	for(k=0;k<4;k++)
+	    	{
+	    		sn++;
+	    		fprintf(p,"%d .%s\t",sn,b[a].seat[j][k]);
+	    	}
+	    }
+    }
+    fclose(p);
+    printf("\tThe folowing information has been saved in a file named ...BusFile...");
+    getch();
+    menu();
+}
+
+void transfile()
+{
+	int i;
+	long unsigned int fdt=0;
+	long unsigned int fbt=0;
+	q=fopen("Transaction Details.txt","w");
+    fprintf(q,"\n\n\t\t. . . . . . tot.Transactions. . . . . . \n");
+    fprintf(q,"\n\t\t---------------------------------------");
+	for(i=1;i<n;i++)
+	{
+		fbt=b[i].sr*b[i].fare;
+		fprintf(q,"\n\tBus no:\t%d",i);
+		fprintf(q,"\n\tTotal Seats booked:\t%d",b[i].sr);
+		fprintf(q,"\n\tMoney transacted for bus no.%d:\t%lu\n",i,fbt);
+		fdt+=fbt;                     
+	}
+	fprintf(q,"\n\n\t\t\tTotal:\t%lu\n",fdt);
+	fclose(q);
+    printf("\tThe folowing information has been saved in a file named ...BusFile...");	
+	getch();
+	menu();
+}
+/*That's it..........This is all about Electronic Bus Ticketing System (With file handling)
+                                                                       ...N S Charan Reddy
+																	         11601863
+																	    	K1651 / A03      
+                                                                              ThankYou            */
+             
